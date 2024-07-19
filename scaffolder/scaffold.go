@@ -1,7 +1,7 @@
 package scaffolder
 
 import (
-	"errors"
+	"fmt"
 	"os"
 	"path"
 
@@ -30,7 +30,7 @@ func recursivelyGenerateFiles(dir config.Directory, baseDir string) error {
 
 	for _, file := range dir.Files {
 		if file.Name == "" {
-			return errors.New("file must have a name")
+			return fmt.Errorf("file must have a name")
 		}
 
 		createdFile, err := os.Create(path.Join(baseDir, dir.Name, file.Name))
