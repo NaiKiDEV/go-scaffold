@@ -43,6 +43,8 @@ func recursivelyGenerateFiles(dir config.Directory, baseDir string) error {
 		if err != nil {
 			return err
 		}
+
+		createdFile.Close()
 	}
 
 	for _, nestedDir := range dir.SubDirectories {
