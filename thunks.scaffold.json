@@ -1,0 +1,34 @@
+{
+  "directoryConfig": [
+    {
+      "name": "actions",
+      "files": [
+        {
+          "name": "{{featureName}}Actions.ts",
+          "template": "./thunks/actions/actions.ts"
+        },
+        {
+          "name": "{{featureName}}Thunks.ts",
+          "template": "./thunks/actions/thunks.ts"
+        },
+        {
+          "name": "index.ts",
+          "template": "./thunks/actions/index.ts"
+        }
+      ]
+    },
+    {
+      "name": "contexts",
+      "files": [
+        {
+          "name": "{{featureName}}Context.ts",
+          "template": "./thunks/contexts/context.ts"
+        },
+        {
+          "name": "index.ts",
+          "template": "./thunks/contexts/index.ts"
+        }
+      ]
+    }
+  ]
+}
