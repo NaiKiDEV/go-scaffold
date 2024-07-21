@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/NaiKiDEV/go-scaffold/config"
 	"github.com/NaiKiDEV/go-scaffold/scaffolder"
@@ -24,7 +25,20 @@ func main() {
 		return
 	}
 
-	if err := scaffolder.Scaffold(cfg, *baseDir); err != nil {
+	// TODO: allow to provide this file, maybe templates could have predefined values?
+	res, err := os.ReadFile("./thunks.scaffold.keys.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	injectedVars, err := config.NewInjectedVariables(res)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("%+v", injectedVars)
+
+	if err := scaffolder.Scaffold(cfg, *baseDir, injectedVars); err != nil {
 		log.Fatalf("Error occurred during scaffolding: [%s]", err)
 	}
 

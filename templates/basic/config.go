@@ -16,13 +16,13 @@ func New() config.Config {
 				Name: "basic-example",
 				Files: []config.File{
 					{
-						Name:     "basic.ts",
+						Name:     "{{featureName}}basic.ts",
 						Template: string(basicFileBytes),
 					},
 				},
 				SubDirectories: []config.Directory{
 					{
-						Name: "nested-folder",
+						Name: "{{projectName}}nested-folder",
 						Files: []config.File{
 							{
 								Name:     "basic.ts",
