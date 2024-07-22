@@ -10,3 +10,4 @@ Currently the templates are baked into the binary. Planned to add dynamic templa
 - cli tool execution as pre and after steps of scaffolding
 - cli tools execution configuration for each directory and file as pre or post creation step
 - template injections inside cli commands
+- prompt to get injected template variables?
