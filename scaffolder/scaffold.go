@@ -9,11 +9,11 @@ import (
 	"github.com/NaiKiDEV/go-scaffold/config"
 )
 
-func Scaffold(c config.Config, baseDir string, injectedVars config.InjectedVariables) error {
+func Scaffold(c config.Config, baseDir string, injectedVars *config.InjectedVariables) error {
 	dirConfig := c.DirectoryConfig
 
 	if injectedVars == nil {
-		injectedVars = make(map[string]string, 0)
+		injectedVars = &map[string]string{}
 	}
 
 	for _, rootConfigDir := range dirConfig {
@@ -27,7 +27,7 @@ func Scaffold(c config.Config, baseDir string, injectedVars config.InjectedVaria
 }
 
 // TODO: add custom error handling for readable errors
-func recursivelyScaffoldFiles(dir config.Directory, baseDirPath string, injectedVars config.InjectedVariables) error {
+func recursivelyScaffoldFiles(dir config.Directory, baseDirPath string, injectedVars *config.InjectedVariables) error {
 	dirPath := path.Join(baseDirPath, replaceTemplateVarsInString(dir.Name, injectedVars))
 	err := os.MkdirAll(dirPath, 0777)
 	if err != nil {
@@ -61,8 +61,8 @@ func recursivelyScaffoldFiles(dir config.Directory, baseDirPath string, injected
 	return nil
 }
 
-func replaceTemplateVarsInString(str string, injectedVars config.InjectedVariables) string {
-	for key, value := range injectedVars {
+func replaceTemplateVarsInString(str string, injectedVars *config.InjectedVariables) string {
+	for key, value := range *injectedVars {
 		str = strings.ReplaceAll(str, fmt.Sprintf("{{%s}}", key), value)
 	}
 	return str
