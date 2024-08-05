@@ -25,16 +25,17 @@ type Config struct {
 }
 
 func ReadConfigFromFile(filePath string) (*Config, error) {
-	cfgFile, err := os.ReadFile(filePath)
+	fileBytes, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
-	cfgFromFile, err := configFromJsonBytes(cfgFile)
-	if err != nil {
-		return nil, err
-	}
-	return cfgFromFile, nil
 
+	cfg, err := configFromJsonBytes(fileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
 }
 
 func configFromJsonBytes(jsonBytes []byte) (*Config, error) {

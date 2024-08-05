@@ -9,12 +9,12 @@ import (
 type InjectedVariables = map[string]string
 
 func ReadInjectedVariablesFromFile(filePath string) (*InjectedVariables, error) {
-	varFile, err := os.ReadFile(filePath)
+	fileBytes, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
 
-	varsFromFile, err := injectedVariablesFromJsonBytes(varFile)
+	varsFromFile, err := injectedVariablesFromJsonBytes(fileBytes)
 	if err != nil {
 		return nil, err
 	}

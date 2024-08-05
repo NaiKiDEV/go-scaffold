@@ -10,13 +10,15 @@ import (
 )
 
 func Scaffold(cfg *config.Config, baseDir string, injectedVars *config.InjectedVariables) error {
-	dirConfig := cfg.DirectoryConfig
+	if cfg == nil {
+		return fmt.Errorf("config is not defined")
+	}
 
 	if injectedVars == nil {
 		injectedVars = &map[string]string{}
 	}
 
-	for _, rootConfigDir := range dirConfig {
+	for _, rootConfigDir := range cfg.DirectoryConfig {
 		err := recursivelyScaffoldFiles(cfg, rootConfigDir, baseDir, injectedVars)
 		if err != nil {
 			return err
@@ -66,8 +68,8 @@ func recursivelyScaffoldFiles(cfg *config.Config, dir config.Directory, baseDirP
 		createdFile.Close()
 	}
 
-	for _, nestedDir := range dir.SubDirectories {
-		if err := recursivelyScaffoldFiles(cfg, nestedDir, dirPath, injectedVars); err != nil {
+	for _, subDirPath := range dir.SubDirectories {
+		if err := recursivelyScaffoldFiles(cfg, subDirPath, dirPath, injectedVars); err != nil {
 			return err
 		}
 	}
