@@ -9,15 +9,15 @@ import (
 	"github.com/NaiKiDEV/go-scaffold/config"
 )
 
-func Scaffold(c config.Config, baseDir string, injectedVars *config.InjectedVariables) error {
-	dirConfig := c.DirectoryConfig
+func Scaffold(cfg *config.Config, baseDir string, injectedVars *config.InjectedVariables) error {
+	dirConfig := cfg.DirectoryConfig
 
 	if injectedVars == nil {
 		injectedVars = &map[string]string{}
 	}
 
 	for _, rootConfigDir := range dirConfig {
-		err := recursivelyScaffoldFiles(rootConfigDir, baseDir, injectedVars)
+		err := recursivelyScaffoldFiles(cfg, rootConfigDir, baseDir, injectedVars)
 		if err != nil {
 			return err
 		}
@@ -26,8 +26,7 @@ func Scaffold(c config.Config, baseDir string, injectedVars *config.InjectedVari
 	return nil
 }
 
-// TODO: add custom error handling for readable errors
-func recursivelyScaffoldFiles(dir config.Directory, baseDirPath string, injectedVars *config.InjectedVariables) error {
+func recursivelyScaffoldFiles(cfg *config.Config, dir config.Directory, baseDirPath string, injectedVars *config.InjectedVariables) error {
 	dirPath := path.Join(baseDirPath, replaceTemplateVarsInString(dir.Name, injectedVars))
 	err := os.MkdirAll(dirPath, 0777)
 	if err != nil {
@@ -44,20 +43,43 @@ func recursivelyScaffoldFiles(dir config.Directory, baseDirPath string, injected
 			return err
 		}
 
-		_, err = createdFile.WriteString(replaceTemplateVarsInString(file.Template, injectedVars))
-		if err != nil {
-			return err
+		if file.TemplateFile != "" {
+			templateFileContent, err := os.ReadFile(path.Join(cfg.TemplateRootPath, file.TemplateFile))
+			if err != nil {
+				return err
+			}
+
+			if err = writeToFile(createdFile, string(templateFileContent), injectedVars); err != nil {
+				return err
+			}
+		}
+
+		if file.TemplateFile == "" {
+			if file.Template == "" {
+				return fmt.Errorf("template file and template were not provided, not able to scaffold the file with name: %s", file.Name)
+			}
+			if err = writeToFile(createdFile, file.Template, injectedVars); err != nil {
+				return err
+			}
 		}
 
 		createdFile.Close()
 	}
 
 	for _, nestedDir := range dir.SubDirectories {
-		if err := recursivelyScaffoldFiles(nestedDir, dirPath, injectedVars); err != nil {
+		if err := recursivelyScaffoldFiles(cfg, nestedDir, dirPath, injectedVars); err != nil {
 			return err
 		}
 	}
 
+	return nil
+}
+
+func writeToFile(file *os.File, template string, injectedVars *config.InjectedVariables) error {
+	_, err := file.WriteString(replaceTemplateVarsInString(template, injectedVars))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

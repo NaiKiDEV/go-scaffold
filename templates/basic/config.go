@@ -9,8 +9,8 @@ import (
 //go:embed templates/basic.ts
 var basicFileBytes []byte
 
-func New() config.Config {
-	return config.Config{
+func New() *config.Config {
+	return &config.Config{
 		DirectoryConfig: []config.Directory{
 			{
 				Name: "basic-example",

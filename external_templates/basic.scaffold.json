@@ -1,0 +1,26 @@
+{
+  "templateVarsPath": "./external_templates/basic.scaffold.keys.json",
+  "templateRootPath": "./external_templates/basic_template",
+  "directoryConfig": [
+    {
+      "name": "__test__basic",
+      "files": [
+        {
+          "name": "{{featureName}}BasicFile.ts",
+          "templateFile": "./basic.ts"
+        }
+      ],
+      "subDirectories": [
+        {
+          "name": "{{projectName}}-nested-folder",
+          "files": [
+            {
+              "name": "{{featureName}}BasicFile.ts",
+              "templateFile": "./basic.ts"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

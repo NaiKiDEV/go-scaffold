@@ -3,11 +3,26 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 )
 
 type InjectedVariables = map[string]string
 
-func NewInjectedVariables(jsonBytes []byte) (*InjectedVariables, error) {
+func ReadInjectedVariablesFromFile(filePath string) (*InjectedVariables, error) {
+	varFile, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	varsFromFile, err := injectedVariablesFromJsonBytes(varFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return varsFromFile, nil
+}
+
+func injectedVariablesFromJsonBytes(jsonBytes []byte) (*InjectedVariables, error) {
 	var userInjectedVars = &map[string]string{}
 
 	ok := json.Valid(jsonBytes)
